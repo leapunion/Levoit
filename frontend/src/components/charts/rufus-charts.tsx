@@ -320,6 +320,57 @@ export function RiskSurfacingTable() {
   );
 }
 
+/* ── Probe Execution Bar+Line (Overview Ops View) ─────── */
+export function ProbeExecutionChart({ height = 256 }: { height?: number }) {
+  const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const probeCount = [22, 24, 20, 26, 25, 18, 21];
+  const successRate = [95.5, 91.7, 100, 92.3, 96.0, 94.4, 95.2];
+
+  const option: Record<string, unknown> = {
+    tooltip: { trigger: "axis" },
+    legend: { bottom: 0, icon: "circle", itemWidth: 10, textStyle: { fontSize: 12, color: "#6B7280" } },
+    grid: { top: 24, right: 48, bottom: 40, left: 48 },
+    xAxis: { type: "category", data: days, axisLabel: { fontSize: 11, color: "#9CA3AF" }, axisLine: { lineStyle: { color: "#E5E7EB" } } },
+    yAxis: [
+      { type: "value", name: "Probes", nameTextStyle: { fontSize: 10, color: "#9CA3AF" }, axisLabel: { fontSize: 10, color: "#9CA3AF" }, splitLine: { lineStyle: { color: "#F3F4F6" } } },
+      { type: "value", name: "Rate %", min: 80, max: 100, nameTextStyle: { fontSize: 10, color: "#9CA3AF" }, axisLabel: { formatter: "{value}%", fontSize: 10, color: "#9CA3AF" }, splitLine: { show: false } },
+    ],
+    series: [
+      { name: "Probe Runs", type: "bar", data: probeCount, barWidth: 24, itemStyle: { color: "#4285F4", borderRadius: [4, 4, 0, 0] } },
+      { name: "Success Rate", type: "line", yAxisIndex: 1, smooth: true, symbol: "circle", symbolSize: 6, lineStyle: { width: 2, color: "#34A853" }, itemStyle: { color: "#34A853" }, data: successRate },
+    ],
+  };
+  return <ReactECharts option={option} style={{ height: `${height}px` }} opts={{ renderer: "svg" }} />;
+}
+
+/* ── Claim Match Trend Line (Overview Content View) ───── */
+export function ClaimMatchTrendLine({ height = 256 }: { height?: number }) {
+  const days = Array.from({ length: 30 }, (_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() - 29 + i);
+    return d.toISOString().slice(0, 10);
+  });
+  const score = days.map((_, i) => +(65 + i * 0.3 + (Math.random() - 0.5) * 4).toFixed(1));
+
+  const option: Record<string, unknown> = {
+    tooltip: { trigger: "axis", valueFormatter: (v: number) => `${v}%` },
+    grid: { top: 24, right: 16, bottom: 32, left: 48 },
+    xAxis: { type: "category", data: days, axisLabel: { fontSize: 10, rotate: 45, interval: 4, color: "#9CA3AF" }, axisLine: { lineStyle: { color: "#E5E7EB" } } },
+    yAxis: { type: "value", min: 50, max: 100, axisLabel: { formatter: "{value}%", fontSize: 10, color: "#9CA3AF" }, splitLine: { lineStyle: { color: "#F3F4F6" } } },
+    series: [{
+      name: "Claim Match",
+      type: "line",
+      smooth: true,
+      symbol: "none",
+      lineStyle: { width: 2.5, color: "#4285F4" },
+      areaStyle: { color: { type: "linear", x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: "rgba(66,133,244,0.2)" }, { offset: 1, color: "rgba(66,133,244,0)" }] } },
+      data: score,
+      markLine: { silent: true, symbol: "none", lineStyle: { color: "#34A853", type: "dashed" }, data: [{ yAxis: 73, label: { formatter: "Current: 73%", fontSize: 10 } }] },
+    }],
+  };
+  return <ReactECharts option={option} style={{ height: `${height}px` }} opts={{ renderer: "svg" }} />;
+}
+
 /* ── Coverage Gap Table (Query Clusters) ──────────────── */
 export function CoverageGapTable() {
   const gaps = [

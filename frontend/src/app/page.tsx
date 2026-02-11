@@ -11,6 +11,7 @@ import { useSearchParams } from "next/navigation";
 import { PageHeader } from "@/components/layout/page-header";
 import { KpiRow } from "@/components/ui/kpi-card";
 import { ChartContainer } from "@/components/ui/chart-container";
+import { AssetTypeBar, ClaimMatchTrendLine, ProbeExecutionChart } from "@/components/charts/rufus-charts";
 
 const TABS = [
   { label: "CEO View", href: "/" },
@@ -123,9 +124,7 @@ function OpsView() {
           </div>
         </ChartContainer>
         <ChartContainer title="Probe Execution" subtitle="Probe runs and success rate over 7 days">
-          <div className="flex h-64 items-center justify-center text-sm text-gray-400">
-            Bar + Line: daily probe count (bar) + success rate (line)
-          </div>
+          <ProbeExecutionChart />
         </ChartContainer>
       </div>
 
@@ -156,14 +155,10 @@ function ContentView() {
     <>
       <div className="grid grid-cols-2 gap-4">
         <ChartContainer title="Content Coverage" subtitle="Amazon content assets by type and Rufus citation status">
-          <div className="flex h-64 items-center justify-center text-sm text-gray-400">
-            Stacked bar: asset type × cited/not-cited
-          </div>
+          <AssetTypeBar />
         </ChartContainer>
         <ChartContainer title="Claim Match Trend" subtitle="How accurately Rufus cites Levoit claims over time">
-          <div className="flex h-64 items-center justify-center text-sm text-gray-400">
-            Line chart: claim match score trend (30d)
-          </div>
+          <ClaimMatchTrendLine />
         </ChartContainer>
       </div>
 
