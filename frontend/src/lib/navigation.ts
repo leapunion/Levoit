@@ -13,7 +13,6 @@ import {
   MessageSquareText,
   Globe,
   FlaskConical,
-  Settings,
   type LucideIcon,
 } from "lucide-react";
 
@@ -223,13 +222,6 @@ export const navigation: (NavItem | NavGroup)[] = [
       { label: "Templates", href: "/experiments/templates" },
     ],
   } satisfies NavGroup,
-
-  // ── Settings ──
-  {
-    label: "Settings",
-    href: "/settings",
-    icon: Settings,
-  } satisfies NavItem,
 ];
 
 // ── Helper: check if an item is a group ───────────────────────
