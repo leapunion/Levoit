@@ -13,6 +13,7 @@ import {
   MessageSquareText,
   Globe,
   FlaskConical,
+  TrendingUp,
   type LucideIcon,
 } from "lucide-react";
 
@@ -220,6 +221,18 @@ export const navigation: (NavItem | NavGroup)[] = [
       },
       { label: "Results", href: "/experiments/results" },
       { label: "Templates", href: "/experiments/templates" },
+    ],
+  } satisfies NavGroup,
+
+  // ── Attribution Analytics ──
+  {
+    label: "Attribution",
+    icon: TrendingUp,
+    href: "/attribution",
+    items: [
+      { label: "Conversion Funnel", href: "/attribution/funnel" },
+      { label: "Revenue Impact", href: "/attribution/revenue" },
+      { label: "Model Comparison", href: "/attribution/models" },
     ],
   } satisfies NavGroup,
 ];
