@@ -11,6 +11,7 @@
 import { PageHeader } from "@/components/layout/page-header";
 import { getTabsForPath } from "@/lib/navigation";
 import { ChartContainer } from "@/components/ui/chart-container";
+import { TopicSunburst, RiskHeatmap } from "@/components/charts/voc-charts";
 
 export default function TopicClustersPage() {
   return (
@@ -27,13 +28,7 @@ export default function TopicClustersPage() {
         subtitle="Hierarchical: Use Case → Decision Dimension → Risk"
         span="full"
       >
-        <div className="flex h-96 items-center justify-center text-sm text-gray-400">
-          {/* ECharts: Sunburst or Tree diagram
-              Level 1: Use Cases (allergies, pets, wildfire, sleep, baby room, small space)
-              Level 2: Decision Dimensions (CADR, noise, filter cost, humidity type, maintenance)
-              Level 3: Risks ("Is the filter really HEPA?", "Noise at max speed", etc.) */}
-          Sunburst: Use Case → Decision Dimension → Risk (sized by mention count)
-        </div>
+        <TopicSunburst />
       </ChartContainer>
 
       {/* Bottom: Topic detail table + Risk severity heatmap */}
@@ -71,10 +66,7 @@ export default function TopicClustersPage() {
             title="Risk Severity Heatmap"
             subtitle="Topic × Risk — frequency and severity"
           >
-            <div className="flex h-64 items-center justify-center text-sm text-gray-400">
-              {/* ECharts: Heatmap — rows=topics, cols=risk dimensions, color=severity */}
-              Heatmap: Topic × Risk dimension (red=high, yellow=medium, green=low)
-            </div>
+            <RiskHeatmap />
           </ChartContainer>
         </div>
       </div>

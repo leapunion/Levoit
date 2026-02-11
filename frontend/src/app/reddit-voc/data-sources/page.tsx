@@ -8,6 +8,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { getTabsForPath } from "@/lib/navigation";
 import { KpiRow } from "@/components/ui/kpi-card";
 import { ChartContainer } from "@/components/ui/chart-container";
+import { CollectionGauge } from "@/components/charts/voc-charts";
 
 const DATA_KPIS = [
   { label: "Active Subreddits", value: 32, format: "number" as const },
@@ -51,10 +52,7 @@ export default function DataSourcesPage() {
         </div>
 
         <ChartContainer title="Collection Health">
-          <div className="flex h-64 items-center justify-center text-sm text-gray-400">
-            {/* ECharts: Gauge — collection health score */}
-            Gauge: Data freshness + completeness score
-          </div>
+          <CollectionGauge />
         </ChartContainer>
       </div>
     </div>

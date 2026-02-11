@@ -9,6 +9,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { getTabsForPath } from "@/lib/navigation";
 import { KpiRow } from "@/components/ui/kpi-card";
 import { ChartContainer } from "@/components/ui/chart-container";
+import { SentimentDonut, MentionTrendsArea, PainPointsBar, SodByTopicBar, EvidenceTreemap } from "@/components/charts/voc-charts";
 
 const REDDIT_KPIS = [
   { label: "Total Mentions", value: 15509, change: 12.5, format: "number" as const },
@@ -34,26 +35,17 @@ export default function RedditVocPage() {
       {/* Row 1: Sentiment donut + Mention trends */}
       <div className="grid grid-cols-2 gap-4">
         <ChartContainer title="Sentiment Distribution">
-          <div className="flex h-64 items-center justify-center text-sm text-gray-400">
-            {/* ECharts: Donut — Positive 65% / Neutral 23% / Negative 12% */}
-            Donut: Positive (green) / Neutral (gray) / Negative (red)
-          </div>
+          <SentimentDonut />
         </ChartContainer>
 
         <ChartContainer title="Mention Trends">
-          <div className="flex h-64 items-center justify-center text-sm text-gray-400">
-            {/* ECharts: Stacked area — Total / Positive / Negative over time */}
-            Stacked area: 30d trend (Total, Positive, Negative)
-          </div>
+          <MentionTrendsArea />
         </ChartContainer>
       </div>
 
       {/* Row 2: Top Pain Points (Risk Library preview) */}
       <ChartContainer title="Top Pain Points (Risks)" span="full">
-        <div className="flex h-48 items-center justify-center text-sm text-gray-400">
-          {/* ECharts: Horizontal bar — top 10 risks by trigger frequency */}
-          Horizontal bar: Filter cost, Noise level, White dust, VOC removal, App connectivity...
-        </div>
+        <PainPointsBar />
       </ChartContainer>
 
       {/* Row 3: SoD by Topic + Evidence Quality */}
@@ -62,20 +54,14 @@ export default function RedditVocPage() {
           title="Share of Discussion by Topic"
           subtitle="Levoit vs competitors — which topics do we own?"
         >
-          <div className="flex h-64 items-center justify-center text-sm text-gray-400">
-            {/* ECharts: Stacked bar — Topic × Brand SoD% */}
-            Stacked bar: Topics on Y, Brands as colors
-          </div>
+          <SodByTopicBar />
         </ChartContainer>
 
         <ChartContainer
           title="Evidence Quality Distribution"
           subtitle="Tested / Long-term / Hearsay / Speculation"
         >
-          <div className="flex h-64 items-center justify-center text-sm text-gray-400">
-            {/* ECharts: Treemap — evidence types by topic */}
-            Treemap: evidence_type × topic, sized by mention count
-          </div>
+          <EvidenceTreemap />
         </ChartContainer>
       </div>
     </div>

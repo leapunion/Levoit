@@ -8,6 +8,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { getTabsForPath } from "@/lib/navigation";
 import { KpiRow } from "@/components/ui/kpi-card";
 import { ChartContainer } from "@/components/ui/chart-container";
+import { SodTrendsArea, ComentionGraph, TopicBrandHeatmap } from "@/components/charts/voc-charts";
 
 const COMPETITOR_KPIS = [
   { label: "Levoit SoD", value: 34.2, change: 2.8, format: "percent" as const },
@@ -33,20 +34,14 @@ export default function CompetitorsPage() {
           title="Share of Discussion Trends"
           subtitle="Brand SoD% over time (30d)"
         >
-          <div className="flex h-64 items-center justify-center text-sm text-gray-400">
-            {/* ECharts: Stacked area — each brand's SoD% over time */}
-            Stacked area: 5 brands SoD% trend
-          </div>
+          <SodTrendsArea />
         </ChartContainer>
 
         <ChartContainer
           title="Co-mention Network"
           subtitle="Which brands are compared together most often"
         >
-          <div className="flex h-64 items-center justify-center text-sm text-gray-400">
-            {/* ECharts: Graph/Force — nodes=brands, edges=co-mention count */}
-            Force graph: brand nodes, edge thickness = co-mention frequency
-          </div>
+          <ComentionGraph />
         </ChartContainer>
       </div>
 
@@ -55,10 +50,7 @@ export default function CompetitorsPage() {
         subtitle="SoD% breakdown by topic and brand"
         span="full"
       >
-        <div className="flex h-64 items-center justify-center text-sm text-gray-400">
-          {/* ECharts: Heatmap — rows=topics, cols=brands, color=SoD% */}
-          Heatmap: Topic × Brand SoD% (darker = higher share)
-        </div>
+        <TopicBrandHeatmap />
       </ChartContainer>
     </div>
   );

@@ -10,6 +10,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { getTabsForPath } from "@/lib/navigation";
 import { KpiRow } from "@/components/ui/kpi-card";
 import { ChartContainer } from "@/components/ui/chart-container";
+import { BridgeSankey, PriorityScatter } from "@/components/charts/voc-charts";
 
 const BRIDGE_KPIS = [
   { label: "Topics Mapped", value: 68, change: 4.1, format: "percent" as const },
@@ -37,13 +38,7 @@ export default function VocGeoBridgePage() {
         subtitle="How Reddit discussions map to Amazon Rufus question types"
         span="full"
       >
-        <div className="flex h-80 items-center justify-center text-sm text-gray-400">
-          {/* ECharts: Sankey
-              Left nodes: Reddit Topics (Allergies, Pets, Wildfire, Noise, Filter Cost...)
-              Right nodes: QueryClusters (Best for allergies, Levoit vs X, Quiet purifier...)
-              Flow width = confidence × frequency */}
-          Sankey: Reddit Topic → QueryCluster (flow = confidence × frequency)
-        </div>
+        <BridgeSankey />
       </ChartContainer>
 
       {/* Content translation status + priority queue */}
@@ -62,10 +57,7 @@ export default function VocGeoBridgePage() {
           title="Priority Score Matrix"
           subtitle="Which topics to fix first (frequency × severity × Rufus impact)"
         >
-          <div className="flex h-64 items-center justify-center text-sm text-gray-400">
-            {/* ECharts: Scatter — X=Reddit frequency, Y=Rufus SoA impact, Size=severity */}
-            Scatter: Frequency × Rufus Impact × Severity
-          </div>
+          <PriorityScatter />
         </ChartContainer>
       </div>
     </div>
