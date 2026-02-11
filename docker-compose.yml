@@ -1,0 +1,71 @@
+###############################################################################
+# Levoit GEO Platform — Local Development Infrastructure
+#
+# Services:
+#   - postgres  : PostgreSQL 17 + TimescaleDB (levoit_geo + levoit_ts)
+#   - mongodb   : MongoDB 7 (levoit_geo — snapshots & quarantine)
+#   - redis     : Redis 7 (cache, streams, rate limiting)
+#
+# Usage:
+#   docker compose up -d            # start all
+#   docker compose logs -f postgres # tail logs
+#   docker compose down -v          # destroy (including volumes)
+###############################################################################
+
+services:
+  # ── PostgreSQL + TimescaleDB ───────────────────────────────
+  postgres:
+    image: timescale/timescaledb:latest-pg17
+    container_name: levoit-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-levoit}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-levoit_dev}
+      POSTGRES_DB: ${POSTGRES_DB:-levoit_geo}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./infra/init-db.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-levoit}"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # ── MongoDB ────────────────────────────────────────────────
+  mongodb:
+    image: mongo:7
+    container_name: levoit-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: ${MONGO_DB:-levoit_geo}
+    ports:
+      - "${MONGO_PORT:-27017}:27017"
+    volumes:
+      - mongodata:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # ── Redis ──────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: levoit-redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  pgdata:
+  mongodata:
+  redisdata:

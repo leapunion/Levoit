@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/anthropics/claude-code/main/.claude/mcp_config.schema.json",
+  "_comment": "项目级 MCP 配置 - Docker MCP Toolkit 已全局启用，此处仅配置项目专属服务器",
+  "_note": "全局 7 个 Docker MCP 服务器 (context7, dockerhub, firecrawl, grafana, mongodb, playwright, redis) 通过 ~/.claude/mcp_config.json 或 docker mcp client connect 已生效，无需重复配置",
+
+  "mcpServers": {}
+}
