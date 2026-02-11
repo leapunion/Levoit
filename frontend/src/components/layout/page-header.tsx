@@ -1,7 +1,8 @@
 "use client";
 
+import { Suspense } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { Calendar } from "lucide-react";
 import { TIME_RANGES, type TimeRange, type NavRouteTab } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
@@ -66,6 +67,39 @@ function IntentFilter() {
   );
 }
 
+/* ── Tab bar (needs useSearchParams → wrapped in Suspense) ── */
+function TabBar({ tabs }: { tabs: NavRouteTab[] }) {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const currentUrl = searchParams.toString()
+    ? `${pathname}?${searchParams.toString()}`
+    : pathname;
+
+  return (
+    <div className="flex gap-0 border-b border-gray-200">
+      {tabs.map((tab) => {
+        const isActive = currentUrl === tab.href;
+
+        return (
+          <Link
+            key={tab.href}
+            href={tab.href}
+            className={cn(
+              "border-b-2 px-4 py-2.5 text-sm font-medium transition-colors",
+              isActive
+                ? "border-blue-600 text-blue-600"
+                : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+            )}
+          >
+            {tab.label}
+          </Link>
+        );
+      })}
+    </div>
+  );
+}
+
 /* ── Page header (exported) ──────────────────────────────── */
 export function PageHeader({
   title,
@@ -74,8 +108,6 @@ export function PageHeader({
   showIntentFilter = false,
   showTimeRange = true,
 }: PageHeaderProps) {
-  const pathname = usePathname();
-
   return (
     <div className="space-y-4">
       {/* Title row */}
@@ -92,26 +124,17 @@ export function PageHeader({
 
       {/* Tab bar */}
       {tabs && tabs.length > 0 && (
-        <div className="flex gap-0 border-b border-gray-200">
-          {tabs.map((tab) => {
-            const isActive = pathname === tab.href;
-
-            return (
-              <Link
-                key={tab.href}
-                href={tab.href}
-                className={cn(
-                  "border-b-2 px-4 py-2.5 text-sm font-medium transition-colors",
-                  isActive
-                    ? "border-blue-600 text-blue-600"
-                    : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
-                )}
-              >
+        <Suspense fallback={
+          <div className="flex gap-0 border-b border-gray-200">
+            {tabs.map((tab) => (
+              <span key={tab.href} className="border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-gray-500">
                 {tab.label}
-              </Link>
-            );
-          })}
-        </div>
+              </span>
+            ))}
+          </div>
+        }>
+          <TabBar tabs={tabs} />
+        </Suspense>
       )}
     </div>
   );
