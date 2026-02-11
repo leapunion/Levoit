@@ -14,6 +14,7 @@ import {
   Globe,
   FlaskConical,
   TrendingUp,
+  Swords,
   type LucideIcon,
 } from "lucide-react";
 
@@ -233,6 +234,18 @@ export const navigation: (NavItem | NavGroup)[] = [
       { label: "Conversion Funnel", href: "/attribution/funnel" },
       { label: "Revenue Impact", href: "/attribution/revenue" },
       { label: "Model Comparison", href: "/attribution/models" },
+    ],
+  } satisfies NavGroup,
+
+  // ── Competitive Intel ──
+  {
+    label: "Competitive Intel",
+    icon: Swords,
+    href: "/competitive-intel",
+    items: [
+      { label: "Market Share", href: "/competitive-intel/market-share" },
+      { label: "Brand Comparison", href: "/competitive-intel/comparison" },
+      { label: "Trend Analysis", href: "/competitive-intel/trends" },
     ],
   } satisfies NavGroup,
 ];
