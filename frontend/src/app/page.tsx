@@ -11,7 +11,9 @@ import { useSearchParams } from "next/navigation";
 import { PageHeader } from "@/components/layout/page-header";
 import { KpiRow } from "@/components/ui/kpi-card";
 import { ChartContainer } from "@/components/ui/chart-container";
-import { AssetTypeBar, ClaimMatchTrendLine, ProbeExecutionChart } from "@/components/charts/rufus-charts";
+import { AssetTypeBar, ClaimMatchTrendLine, ProbeExecutionChart, SoaByClusterBar } from "@/components/charts/rufus-charts";
+import { BridgeSankey } from "@/components/charts/voc-charts";
+import { VocHealthBubble, RiskStatusDonut, CompetitiveLandscapeBar } from "@/components/charts/overview-charts";
 
 const TABS = [
   { label: "CEO View", href: "/" },
@@ -53,27 +55,19 @@ function CeoView() {
     <>
       <div className="grid grid-cols-2 gap-4">
         <ChartContainer title="Reddit VOC Health" subtitle="Share of Discussion × Sentiment by Topic">
-          <div className="flex h-64 items-center justify-center text-sm text-gray-400">
-            Bubble chart: SoD × Sentiment × Volume per Topic
-          </div>
+          <VocHealthBubble />
         </ChartContainer>
         <ChartContainer title="Rufus Share of Answer" subtitle="Levoit appearance rate across Query Clusters">
-          <div className="flex h-64 items-center justify-center text-sm text-gray-400">
-            Bar chart: SoA% per Cluster (A1 blue / A2 yellow / A3 green)
-          </div>
+          <SoaByClusterBar />
         </ChartContainer>
       </div>
 
       <div className="grid grid-cols-3 gap-4">
         <ChartContainer title="Topic → Query Bridge" subtitle="Reddit Topics mapped to Rufus Query Clusters">
-          <div className="flex h-56 items-center justify-center text-sm text-gray-400">
-            Sankey: Reddit Topic → QueryCluster flow
-          </div>
+          <BridgeSankey height={224} />
         </ChartContainer>
         <ChartContainer title="Risk Counter-Content Status" subtitle="Risks with Amazon content coverage">
-          <div className="flex h-56 items-center justify-center text-sm text-gray-400">
-            Donut: 23 covered, 12 partial, 12 missing
-          </div>
+          <RiskStatusDonut />
         </ChartContainer>
         <ChartContainer title="This Week's Actions" subtitle="Priority-ranked items to fix">
           <div className="flex h-56 flex-col gap-2 overflow-y-auto text-sm text-gray-400">
@@ -91,9 +85,7 @@ function CeoView() {
       </div>
 
       <ChartContainer title="Competitive Landscape" subtitle="Levoit vs Dyson vs Coway vs Honeywell — Reddit SoD + Rufus SoA" span="full">
-        <div className="flex h-64 items-center justify-center text-sm text-gray-400">
-          Grouped bar: 4 brands × 2 metrics (SoD + SoA)
-        </div>
+        <CompetitiveLandscapeBar />
       </ChartContainer>
     </>
   );
