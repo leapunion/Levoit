@@ -9,6 +9,7 @@ import { getTabsForPath } from "@/lib/navigation";
 import { KpiRow } from "@/components/ui/kpi-card";
 import { ChartContainer } from "@/components/ui/chart-container";
 import { StatusBadge } from "@/components/ui/status-badge";
+import { ProbeResultScatter, ClaimCitationBar } from "@/components/charts/rufus-charts";
 
 const PROBE_KPIS = [
   { label: "Active Probes", value: 12, format: "number" as const },
@@ -63,20 +64,14 @@ export default function ProbeRunnerPage() {
           title="Probe Result Timeline"
           subtitle="Levoit presence and rank across probe runs"
         >
-          <div className="flex h-64 items-center justify-center text-sm text-gray-400">
-            {/* ECharts: Scatter + Line — X=time, Y=rank, color=present/absent */}
-            Scatter: Probe results over time (green=present, red=absent, Y=rank)
-          </div>
+          <ProbeResultScatter />
         </ChartContainer>
 
         <ChartContainer
           title="Claim Citation Frequency"
           subtitle="Which Levoit claims are most cited by Rufus"
         >
-          <div className="flex h-64 items-center justify-center text-sm text-gray-400">
-            {/* ECharts: Horizontal bar — claim text × citation count */}
-            Bar: "True HEPA" (34), "3-stage filtration" (28), "QuietKEAP" (19)...
-          </div>
+          <ClaimCitationBar />
         </ChartContainer>
       </div>
     </div>

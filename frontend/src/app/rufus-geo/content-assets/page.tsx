@@ -8,6 +8,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { getTabsForPath } from "@/lib/navigation";
 import { KpiRow } from "@/components/ui/kpi-card";
 import { ChartContainer } from "@/components/ui/chart-container";
+import { AssetTypeBar, AssetClaimSankey } from "@/components/charts/rufus-charts";
 
 const ASSET_KPIS = [
   { label: "ASINs Tracked", value: 12, format: "number" as const },
@@ -34,20 +35,14 @@ export default function ContentAssetsPage() {
           title="Asset Type Distribution"
           subtitle="Content inventory by type and Rufus citation status"
         >
-          <div className="flex h-64 items-center justify-center text-sm text-gray-400">
-            {/* ECharts: Stacked bar — asset type × (cited / not cited) */}
-            Stacked bar: Listing / Bullets / A+ Table / A+ Compare / Q&A / Review Cluster
-          </div>
+          <AssetTypeBar />
         </ChartContainer>
 
         <ChartContainer
           title="Asset → Claim → Topic Flow"
           subtitle="How content assets connect to claims and topics"
         >
-          <div className="flex h-64 items-center justify-center text-sm text-gray-400">
-            {/* ECharts: Sankey — Asset → Claim → Topic */}
-            Sankey: Asset Type → Claim → Topic flow
-          </div>
+          <AssetClaimSankey />
         </ChartContainer>
       </div>
 

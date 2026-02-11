@@ -8,6 +8,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { getTabsForPath } from "@/lib/navigation";
 import { KpiRow } from "@/components/ui/kpi-card";
 import { ChartContainer } from "@/components/ui/chart-container";
+import { IntentFunnel, CoverageGapTable } from "@/components/charts/rufus-charts";
 
 const CLUSTER_KPIS = [
   { label: "Total Clusters", value: 48, format: "number" as const },
@@ -36,10 +37,7 @@ export default function QueryClustersPage() {
             title="Intent Funnel"
             subtitle="Query distribution across A1 → A2 → A3"
           >
-            <div className="flex h-72 items-center justify-center text-sm text-gray-400">
-              {/* ECharts: Funnel — A1 (18) → A2 (20) → A3 (10) */}
-              Funnel: A1 Research (18) → A2 Evaluation (20) → A3 Purchase (10)
-            </div>
+            <IntentFunnel />
           </ChartContainer>
         </div>
 
@@ -77,10 +75,7 @@ export default function QueryClustersPage() {
         subtitle="Reddit Topics with high discussion volume but no mapped QueryCluster"
         span="full"
       >
-        <div className="flex h-48 items-center justify-center text-sm text-gray-400">
-          {/* Table: Unmapped Reddit Topic | Mention Volume | Suggested Cluster | Action */}
-          Table: Unmapped topics with suggested QueryCluster creation
-        </div>
+        <CoverageGapTable />
       </ChartContainer>
     </div>
   );
