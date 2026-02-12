@@ -9,6 +9,10 @@ import { getTabsForPath } from "@/lib/navigation";
 import { KpiRow } from "@/components/ui/kpi-card";
 import { ChartContainer } from "@/components/ui/chart-container";
 import { StatusBadge } from "@/components/ui/status-badge";
+import {
+  ExperimentImpactTimeline,
+  SuccessFailureDistribution,
+} from "@/components/charts/experiments-charts";
 
 const EXP_KPIS = [
   { label: "Running", value: 3, format: "number" as const },
@@ -91,20 +95,14 @@ export default function ExperimentsPage() {
           title="Experiment Impact Timeline"
           subtitle="Metric changes before/during/after experiments"
         >
-          <div className="flex h-64 items-center justify-center text-sm text-gray-400">
-            {/* ECharts: Line with markers — vertical lines = experiment start/end */}
-            Line chart with experiment period markers
-          </div>
+          <ExperimentImpactTimeline />
         </ChartContainer>
 
         <ChartContainer
           title="Success/Failure Distribution"
           subtitle="Experiment outcomes by type"
         >
-          <div className="flex h-64 items-center justify-center text-sm text-gray-400">
-            {/* ECharts: Stacked bar — experiment type × (success/fail/inconclusive) */}
-            Stacked bar: success/fail/inconclusive per experiment type
-          </div>
+          <SuccessFailureDistribution />
         </ChartContainer>
       </div>
     </div>

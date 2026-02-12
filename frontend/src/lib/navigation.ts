@@ -15,6 +15,7 @@ import {
   FlaskConical,
   TrendingUp,
   Swords,
+  Sparkles,
   type LucideIcon,
 } from "lucide-react";
 
@@ -246,6 +247,18 @@ export const navigation: (NavItem | NavGroup)[] = [
       { label: "Market Share", href: "/competitive-intel/market-share" },
       { label: "Brand Comparison", href: "/competitive-intel/comparison" },
       { label: "Trend Analysis", href: "/competitive-intel/trends" },
+    ],
+  } satisfies NavGroup,
+
+  // ── Content Factory ──
+  {
+    label: "Content Factory",
+    icon: Sparkles,
+    href: "/content-factory",
+    items: [
+      { label: "Content Pipeline", href: "/content-factory/pipeline" },
+      { label: "Content Library", href: "/content-factory/library" },
+      { label: "Performance", href: "/content-factory/performance" },
     ],
   } satisfies NavGroup,
 ];

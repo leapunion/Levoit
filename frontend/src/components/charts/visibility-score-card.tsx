@@ -1,103 +1,119 @@
 "use client";
 
-import { TrendingUp, TrendingDown, Minus } from "lucide-react";
-import { cn } from "@/lib/utils";
+import ReactECharts from "echarts-for-react";
 
 interface VisibilityScoreCardProps {
   score: number;
-  previousScore: number | null;
-  period: string;
-  onPeriodChange: (period: string) => void;
   loading?: boolean;
 }
 
-const PERIODS = [
-  { label: "Day", value: "daily" },
-  { label: "Week", value: "weekly" },
-  { label: "Month", value: "monthly" },
-];
-
 export function VisibilityScoreCard({
   score,
-  previousScore,
-  period,
-  onPeriodChange,
   loading = false,
 }: VisibilityScoreCardProps) {
-  const delta =
-    previousScore != null && previousScore > 0
-      ? ((score - previousScore) / previousScore) * 100
-      : null;
+  if (loading) {
+    return (
+      <div className="flex h-[300px] items-center justify-center rounded-xl border border-gray-200 bg-white">
+        <div className="h-40 w-40 animate-pulse rounded-full bg-gray-100" />
+      </div>
+    );
+  }
 
-  const DeltaIcon =
-    delta == null || delta === 0
-      ? Minus
-      : delta > 0
-        ? TrendingUp
-        : TrendingDown;
-
-  const deltaColor =
-    delta == null || delta === 0
-      ? "text-gray-400"
-      : delta > 0
-        ? "text-emerald-600"
-        : "text-red-500";
+  const option: Record<string, unknown> = {
+    series: [
+      {
+        type: "gauge",
+        startAngle: 210,
+        endAngle: -30,
+        min: 0,
+        max: 100,
+        radius: "88%",
+        splitNumber: 10,
+        // Colored arc: red → yellow → green
+        axisLine: {
+          lineStyle: {
+            width: 14,
+            color: [
+              [0.3, "#EA4335"],
+              [0.6, "#FBBC04"],
+              [1, "#34A853"],
+            ],
+          },
+        },
+        // Small ticks
+        axisTick: {
+          distance: -14,
+          length: 6,
+          lineStyle: { color: "auto", width: 1.5 },
+        },
+        // Major split lines
+        splitLine: {
+          distance: -18,
+          length: 14,
+          lineStyle: { color: "auto", width: 2.5 },
+        },
+        // Scale labels: 0, 20, 40 ... 100
+        axisLabel: {
+          distance: 24,
+          fontSize: 12,
+          color: "#6B7280",
+          fontWeight: "500",
+        },
+        // Needle pointer
+        pointer: {
+          icon: "path://M12.8,0.7l12,40.1H0.7L12.8,0.7z",
+          length: "60%",
+          width: 8,
+          offsetCenter: [0, "-5%"],
+          itemStyle: {
+            color: "auto",
+            shadowColor: "rgba(0,0,0,0.25)",
+            shadowBlur: 6,
+            shadowOffsetY: 2,
+          },
+        },
+        // Center pin
+        anchor: {
+          show: true,
+          showAbove: true,
+          size: 14,
+          itemStyle: {
+            borderWidth: 3,
+            borderColor: "#6B7280",
+            color: "#fff",
+            shadowColor: "rgba(0,0,0,0.15)",
+            shadowBlur: 4,
+          },
+        },
+        // Title below value
+        title: {
+          show: true,
+          offsetCenter: [0, "72%"],
+          fontSize: 13,
+          color: "#6B7280",
+          fontWeight: "normal",
+        },
+        // Large center value
+        detail: {
+          valueAnimation: true,
+          offsetCenter: [0, "45%"],
+          fontSize: 36,
+          fontWeight: "bold",
+          color: "#111827",
+          formatter: (v: number) => v.toFixed(1),
+        },
+        data: [{ value: score, name: "AI Visibility Score" }],
+      },
+    ],
+  };
 
   return (
-    <div className="flex flex-col items-center rounded-xl border border-gray-200 bg-white px-8 py-8">
-      {/* Period selector */}
-      <div className="mb-6 flex items-center gap-1 rounded-lg border border-gray-200 bg-gray-50 p-0.5">
-        {PERIODS.map((p) => (
-          <button
-            key={p.value}
-            onClick={() => onPeriodChange(p.value)}
-            className={cn(
-              "rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
-              period === p.value
-                ? "bg-white text-blue-700 shadow-sm"
-                : "text-gray-500 hover:text-gray-700",
-            )}
-          >
-            {p.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Score */}
-      {loading ? (
-        <div className="flex h-24 items-center">
-          <div className="h-16 w-32 animate-pulse rounded-lg bg-gray-100" />
-        </div>
-      ) : (
-        <>
-          <span className="text-7xl font-bold tabular-nums text-brand-blue">
-            {score.toFixed(1)}
-          </span>
-          <span className="mt-1 text-sm text-gray-400">
-            AI Visibility Score
-          </span>
-        </>
-      )}
-
-      {/* Delta badge */}
-      {delta != null && !loading && (
-        <div
-          className={cn(
-            "mt-4 flex items-center gap-1 rounded-full px-3 py-1 text-sm font-medium",
-            delta > 0
-              ? "bg-emerald-50 text-emerald-700"
-              : delta < 0
-                ? "bg-red-50 text-red-700"
-                : "bg-gray-50 text-gray-500",
-          )}
-        >
-          <DeltaIcon size={14} />
-          <span>
-            {delta > 0 ? "+" : ""}
-            {delta.toFixed(1)}% vs prev {period === "daily" ? "day" : period === "weekly" ? "week" : "month"}
-          </span>
-        </div>
-      )}
+    <div className="rounded-xl border border-gray-200 bg-white">
+      <ReactECharts
+        option={option}
+        style={{ height: "300px" }}
+        opts={{ renderer: "svg" }}
+      />
     </div>
   );
 }

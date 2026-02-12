@@ -16,16 +16,15 @@ import { KpiRow } from "@/components/ui/kpi-card";
 import { VisibilityScoreCard } from "@/components/charts/visibility-score-card";
 import { TopQueriesList } from "@/components/charts/top-queries-list";
 import { scores } from "@/lib/api";
+import { MOCK_SCORES, MOCK_COMPARISON } from "@/lib/mock/visibility";
 import type { ComparisonRow, KpiMetric } from "@/lib/types";
 
 export default function VisibilityOverviewPage() {
-  const [period, setPeriod] = useState("raw");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Aggregated score state
   const [currentScore, setCurrentScore] = useState(0);
-  const [previousScore, setPreviousScore] = useState<number | null>(null);
   const [queryCount, setQueryCount] = useState(0);
 
   // Comparison rows
@@ -37,7 +36,7 @@ export default function VisibilityOverviewPage() {
     try {
       // Fetch Levoit scores (latest, period-filtered)
       const [scoreResult, compResult] = await Promise.all([
-        scores.list({ brand: "Levoit", period, page_size: 100 }),
+        scores.list({ brand: "Levoit", period: "raw", page_size: 100 }),
         scores.comparison(),
       ]);
 
@@ -57,38 +56,25 @@ export default function VisibilityOverviewPage() {
         setQueryCount(0);
       }
 
-      // Previous score: fetch the previous period's data for delta
-      // Simplified: use raw scores as baseline when viewing aggregated
-      if (period !== "raw") {
-        const prevResult = await scores.list({
-          brand: "Levoit",
-          period: "raw",
-          page_size: 100,
-        });
-        if (prevResult.data.length > 0) {
-          const prevAvg =
-            prevResult.data.reduce((sum, s) => sum + s.visibility_score, 0) /
-            prevResult.data.length;
-          setPreviousScore(Math.round(prevAvg * 10) / 10);
-        } else {
-          setPreviousScore(null);
-        }
-      } else {
-        setPreviousScore(null);
-      }
+
 
       setComparison(compResult);
-    } catch (e) {
-      // API not available — show placeholder data
-      setError(e instanceof Error ? e.message : "Failed to fetch data");
-      setCurrentScore(0);
-      setPreviousScore(null);
-      setComparison([]);
-      setQueryCount(0);
+    } catch {
+      // API not available — use mock data as fallback
+      const mockScores = MOCK_SCORES;
+      if (mockScores.length > 0) {
+        const avg = mockScores.reduce((sum, s) => sum + s.visibility_score, 0) / mockScores.length;
+        setCurrentScore(Math.round(avg * 10) / 10);
+        const uniqueQueries = new Set(mockScores.map((s) => s.query_id));
+        setQueryCount(uniqueQueries.size);
+      }
+
+      setComparison(MOCK_COMPARISON);
+      setError("Backend unavailable — showing demo data");
     } finally {
       setLoading(false);
     }
-  }, [period]);
+  }, []);
 
   useEffect(() => {
     fetchData();
@@ -153,12 +139,9 @@ export default function VisibilityOverviewPage() {
       {/* KPI strip */}
       <KpiRow metrics={kpis} />
 
-      {/* Hero: Visibility Score card */}
+      {/* Hero: Visibility Score gauge */}
       <VisibilityScoreCard
         score={currentScore}
-        previousScore={previousScore}
-        period={period}
-        onPeriodChange={setPeriod}
         loading={loading}
       />
 

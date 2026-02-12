@@ -13,6 +13,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { getTabsForPath } from "@/lib/navigation";
 import { ComparisonTable } from "@/components/charts/comparison-table";
 import { scores } from "@/lib/api";
+import { MOCK_COMPARISON } from "@/lib/mock/visibility";
 import type { ComparisonRow } from "@/lib/types";
 
 export default function ComparisonPage() {
@@ -27,8 +28,9 @@ export default function ComparisonPage() {
       const data = await scores.comparison();
       setRows(data);
     } catch {
-      setError("Could not load comparison data. Ensure the backend is running.");
-      setRows([]);
+      // Fallback to mock data
+      setRows(MOCK_COMPARISON);
+      setError("Backend unavailable — showing demo data");
     } finally {
       setLoading(false);
     }

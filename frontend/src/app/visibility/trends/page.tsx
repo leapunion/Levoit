@@ -16,6 +16,7 @@ import { getTabsForPath } from "@/lib/navigation";
 import { ChartContainer } from "@/components/ui/chart-container";
 import { RankTrendChart } from "@/components/charts/rank-trend-chart";
 import { queries, rankings } from "@/lib/api";
+import { MOCK_QUERIES, MOCK_TRENDS } from "@/lib/mock/visibility";
 import type { TrendPoint, VisQueryResponse } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -54,7 +55,12 @@ function TrendsContent() {
         }
       })
       .catch(() => {
-        setError("Could not load queries");
+        // Fallback to mock queries
+        setQueryList(MOCK_QUERIES);
+        if (!selectedQueryId && MOCK_QUERIES.length > 0) {
+          setSelectedQueryId(MOCK_QUERIES[0].id);
+        }
+        setError("Backend unavailable — showing demo data");
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -85,9 +91,17 @@ function TrendsContent() {
       });
       setBrands(uniqueBrands);
     } catch {
-      setError("Could not load trend data. Ensure the backend is running.");
-      setTrendData([]);
-      setBrands([]);
+      // Fallback to mock trend data
+      const mockData = MOCK_TRENDS[selectedQueryId] ?? [];
+      setTrendData(mockData);
+      const uniqueBrands = [...new Set(mockData.map((d) => d.brand))];
+      uniqueBrands.sort((a, b) => {
+        if (a === "Levoit") return -1;
+        if (b === "Levoit") return 1;
+        return a.localeCompare(b);
+      });
+      setBrands(uniqueBrands);
+      if (!error) setError("Backend unavailable — showing demo data");
     } finally {
       setLoading(false);
     }

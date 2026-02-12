@@ -15,6 +15,7 @@ import { ChartContainer } from "@/components/ui/chart-container";
 import { PlatformBreakdown } from "@/components/charts/platform-breakdown";
 import { SnippetModal } from "@/components/charts/snippet-modal";
 import { queries, rankings } from "@/lib/api";
+import { MOCK_QUERIES, MOCK_RANKINGS } from "@/lib/mock/visibility";
 import type { RankingResponse, VisQueryResponse } from "@/lib/types";
 
 interface Props {
@@ -42,7 +43,12 @@ export default function PlatformBreakdownPage({ params }: Props) {
       setQuery(q);
       setRankingData(r);
     } catch {
-      setError("Could not load data. Ensure the backend is running.");
+      // Fallback to mock data
+      const mockQuery = MOCK_QUERIES.find((q) => q.id === qid) ?? MOCK_QUERIES[0];
+      const mockRankings = MOCK_RANKINGS[qid] ?? MOCK_RANKINGS[1] ?? [];
+      setQuery(mockQuery);
+      setRankingData(mockRankings);
+      setError("Backend unavailable — showing demo data");
     } finally {
       setLoading(false);
     }
