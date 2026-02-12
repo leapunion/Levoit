@@ -9,7 +9,6 @@
 
 import {
   LayoutDashboard,
-  Eye,
   MessageSquareText,
   Globe,
   FlaskConical,
@@ -65,28 +64,6 @@ export const navigation: (NavItem | NavGroup)[] = [
     href: "/",
     icon: LayoutDashboard,
   } satisfies NavItem,
-
-  // ── AI Search Visibility ──
-  {
-    label: "AI Visibility",
-    icon: Eye,
-    href: "/visibility",
-    defaultOpen: true,
-    items: [
-      {
-        label: "Overview",
-        href: "/visibility",
-      },
-      {
-        label: "Ranking Trends",
-        href: "/visibility/trends",
-      },
-      {
-        label: "Comparison",
-        href: "/visibility/comparison",
-      },
-    ],
-  } satisfies NavGroup,
 
   // ── Part 1: Reddit VOC (R1-R4) ──
   {
