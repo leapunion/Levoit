@@ -56,6 +56,181 @@ export function ContentFlowSankey({ height = 360 }: { height?: number }) {
   );
 }
 
+/* ── Reddit Content Seeding Sankey ──────────────────── */
+export function RedditContentSankey({ height = 380 }: { height?: number }) {
+  const option: Record<string, unknown> = {
+    tooltip: { trigger: "item", triggerOn: "mousemove" },
+    series: [
+      {
+        type: "sankey",
+        layout: "none",
+        emphasis: { focus: "adjacency" },
+        nodeAlign: "justify",
+        nodeGap: 16,
+        nodeWidth: 22,
+        lineStyle: { color: "gradient", curveness: 0.5, opacity: 0.45 },
+        label: { fontSize: 11, color: "#374151" },
+        data: [
+          { name: "Reddit Posts (42)", itemStyle: { color: COLORS.blue } },
+          { name: "Classic 160 (15)", itemStyle: { color: COLORS.orange } },
+          { name: "Classic 300S (27)", itemStyle: { color: COLORS.cyan } },
+          { name: "Survived (9)", itemStyle: { color: "#8BC34A" } },
+          { name: "Removed (6)", itemStyle: { color: COLORS.red } },
+          { name: "Survived (24)", itemStyle: { color: COLORS.green } },
+          { name: "Removed (3)", itemStyle: { color: "#EF9A9A" } },
+          { name: "Comments (694)", itemStyle: { color: COLORS.purple } },
+          { name: "Upvotes (840)", itemStyle: { color: COLORS.yellow } },
+        ],
+        links: [
+          { source: "Reddit Posts (42)", target: "Classic 160 (15)", value: 15 },
+          { source: "Reddit Posts (42)", target: "Classic 300S (27)", value: 27 },
+          { source: "Classic 160 (15)", target: "Survived (9)", value: 9 },
+          { source: "Classic 160 (15)", target: "Removed (6)", value: 6 },
+          { source: "Classic 300S (27)", target: "Survived (24)", value: 24 },
+          { source: "Classic 300S (27)", target: "Removed (3)", value: 3 },
+          { source: "Survived (9)", target: "Comments (694)", value: 110 },
+          { source: "Survived (9)", target: "Upvotes (840)", value: 42 },
+          { source: "Survived (24)", target: "Comments (694)", value: 584 },
+          { source: "Survived (24)", target: "Upvotes (840)", value: 798 },
+        ],
+      },
+    ],
+  };
+  return (
+    <ReactECharts
+      option={option}
+      style={{ height: `${height}px` }}
+      opts={{ renderer: "svg" }}
+    />
+  );
+}
+
+/* ── Product Comparison Bar (Classic 160 vs 300S) ───── */
+export function ProductComparisonBar({ height = 300 }: { height?: number }) {
+  const option: Record<string, unknown> = {
+    tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
+    legend: {
+      bottom: 0,
+      icon: "circle",
+      itemWidth: 10,
+      textStyle: { fontSize: 12, color: "#6B7280" },
+    },
+    grid: { top: 24, right: 40, bottom: 40, left: 130 },
+    xAxis: {
+      type: "value",
+      axisLabel: { fontSize: 10, color: "#9CA3AF" },
+      splitLine: { lineStyle: { color: "#F3F4F6" } },
+    },
+    yAxis: {
+      type: "category",
+      data: [
+        "Avg Upvotes\n/Post",
+        "Avg Comments\n/Post",
+        "Upvotes",
+        "Comments",
+        "Removed",
+        "Survived",
+        "Total Posts",
+      ],
+      axisLabel: { fontSize: 11, color: "#374151" },
+      axisLine: { lineStyle: { color: "#E5E7EB" } },
+    },
+    series: [
+      {
+        name: "Classic 160",
+        type: "bar",
+        data: [4.7, 12.2, 42, 110, 6, 9, 15],
+        itemStyle: { color: COLORS.orange, borderRadius: [0, 3, 3, 0] },
+        barWidth: 14,
+        label: {
+          show: true,
+          position: "right",
+          fontSize: 10,
+          color: "#9CA3AF",
+        },
+      },
+      {
+        name: "Classic 300S",
+        type: "bar",
+        data: [33.3, 24.3, 798, 584, 3, 24, 27],
+        itemStyle: { color: COLORS.cyan, borderRadius: [0, 3, 3, 0] },
+        barWidth: 14,
+        label: {
+          show: true,
+          position: "right",
+          fontSize: 10,
+          color: "#9CA3AF",
+        },
+      },
+    ],
+  };
+  return (
+    <ReactECharts
+      option={option}
+      style={{ height: `${height}px` }}
+      opts={{ renderer: "svg" }}
+    />
+  );
+}
+
+/* ── Content Survival Donut (by product) ────────────── */
+export function ContentSurvivalDonut({ height = 300 }: { height?: number }) {
+  const option: Record<string, unknown> = {
+    tooltip: { trigger: "item", formatter: "{b}: {c} posts ({d}%)" },
+    legend: {
+      bottom: 0,
+      icon: "circle",
+      itemWidth: 10,
+      textStyle: { fontSize: 12, color: "#6B7280" },
+    },
+    series: [
+      {
+        name: "Classic 160",
+        type: "pie",
+        radius: ["20%", "42%"],
+        center: ["30%", "45%"],
+        label: { show: false },
+        data: [
+          { value: 9, name: "160 Survived", itemStyle: { color: "#FFB74D" } },
+          { value: 6, name: "160 Removed", itemStyle: { color: COLORS.red } },
+        ],
+      },
+      {
+        name: "Classic 300S",
+        type: "pie",
+        radius: ["20%", "42%"],
+        center: ["70%", "45%"],
+        label: { show: false },
+        data: [
+          { value: 24, name: "300S Survived", itemStyle: { color: COLORS.cyan } },
+          { value: 3, name: "300S Removed", itemStyle: { color: "#EF9A9A" } },
+        ],
+      },
+    ],
+    graphic: [
+      {
+        type: "text",
+        left: "22%",
+        top: "38%",
+        style: { text: "Classic 160\n60%", textAlign: "center", fontSize: 13, fontWeight: "bold", fill: "#374151" },
+      },
+      {
+        type: "text",
+        left: "62%",
+        top: "38%",
+        style: { text: "Classic 300S\n89%", textAlign: "center", fontSize: 13, fontWeight: "bold", fill: "#374151" },
+      },
+    ],
+  };
+  return (
+    <ReactECharts
+      option={option}
+      style={{ height: `${height}px` }}
+      opts={{ renderer: "svg" }}
+    />
+  );
+}
+
 /* ── Content Velocity Line (30d area) ────────────────── */
 export function ContentVelocityLine({ height = 256 }: { height?: number }) {
   const days = Array.from({ length: 30 }, (_, i) => {
