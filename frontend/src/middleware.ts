@@ -16,9 +16,13 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Protected path without session → redirect to login
+  // Protected path without session → redirect to login (preserve original URL)
   if (request.cookies.get("levoit_session")?.value !== "authenticated") {
-    return NextResponse.redirect(new URL("/login", request.url));
+    const loginUrl = new URL("/login", request.url);
+    if (pathname !== "/") {
+      loginUrl.searchParams.set("from", pathname);
+    }
+    return NextResponse.redirect(loginUrl);
   }
 
   return NextResponse.next();

@@ -1,8 +1,13 @@
 "use client";
 
 import { useState, FormEvent } from "react";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function LoginPage() {
+function LoginForm() {
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("from") || "/";
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -28,7 +33,7 @@ export default function LoginPage() {
       }
 
       // Full reload so middleware and layout pick up the new cookie
-      window.location.href = "/";
+      window.location.href = redirectTo;
     } catch {
       setError("Network error. Please try again.");
       setLoading(false);
@@ -99,5 +104,13 @@ export default function LoginPage() {
         </form>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
   );
 }
